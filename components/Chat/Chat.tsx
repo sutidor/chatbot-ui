@@ -64,7 +64,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   const [showScrollDownButton, setShowScrollDownButton] =
     useState<boolean>(false);
   const [responseCount, setResponseCount] = useState(0);
-  const maxResponseCount = process.env.MAX_RESPONSE_COUNT || 10;
+  const maxResponseCount = process.env.REACT_APP_MAX_RESPONSE_COUNT || 10;
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
