@@ -63,6 +63,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [showScrollDownButton, setShowScrollDownButton] =
     useState<boolean>(false);
+  const [responseCount, setResponseCount] = useState<boolean>(false);
+  const maxResponseCount = process.env.REACT_APP_MAX_RESPONSE_COUNT || 10;
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -91,6 +93,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           field: 'selectedConversation',
           value: updatedConversation,
         });
+        setResponseCount(responseCount + 1);
         homeDispatch({ field: 'loading', value: true });
         homeDispatch({ field: 'messageIsStreaming', value: true });
         const chatBody: ChatBody = {
@@ -102,6 +105,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         };
         const endpoint = getEndpoint(plugin);
         let body;
+        if (responseCount >= maxResponseCount) {
+          stopConversationRef.current = true;
+          return;
+        }
         if (!plugin) {
           body = JSON.stringify(chatBody);
         } else {
